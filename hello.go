@@ -1,20 +1,39 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
-	letters := [...]string{"z", "x", "c", "d", "v"}
-	combinations := []string{}
-	for i, letter := range letters {
-		c := []string{}
-		c = append(c, letter)
-		for _, letter range letters[i:-1] {
-			c = append(c, letter)
-		}
-		combinations = append(combinations, c)
-		fmt.Printf("Created combintation: %s", c)
+	//letters := [...]string{"z", "x", "c", "d", "v"}
+	//combinations := []string{}
+	//for i, letter := range letters {
+	//	c := []string{}
+	//	c = append(c, letter)
+	//for _, letter range letters[i:-1] {
+	//	c = append(c, letter)
+	//}
+	//combinations = append(combinations, c)
+	//fmt.Printf("Created combintation: %s", c)
+	//}
+
+	example := []string{"a", "b", "c"}
+	result, err := RemoveElement(example, 1)
+	if err != nil {
+		fmt.Printf("error: %s", err)
+	}
+	if len(result) < 1 {
+		fmt.Printf("stuff2")
+	}
+	if result[0] == "a" {
+		fmt.Printf("stuff")
 	}
 }
+
+//type CombinationMaker interface {
+//	RemoveElement([]string, int) (result []string, err error)
+//}
 
 func makeCombinations(a []string, prefix string, r []string) (result []string, err error) {
 	if len(a) == 1 {
@@ -32,16 +51,25 @@ func makeCombinations(a []string, prefix string, r []string) (result []string, e
 
 		}
 	}
-
+	return nil, err
 }
 
 // TODO: create a function that returns an array with the index removed
-func removeElement(a []string, i int) (result []string, err error){
-	if a == nil || len(a) < 2 {
+func RemoveElement(a []string, i int) (result []string, err error) {
+	if a == nil {
+		err := errors.New("Cannot split an empty array")
 		return nil, err
 	}
-	start := a[:i-1]
+	if len(a) < 2 {
+		err := errors.New("Cannot split an array with a single item")
+		return nil, err
+	}
+	if i >= len(a) {
+		err := errors.New("Index out of bounds")
+		return nil, err
+	}
+	start := a[0:i]
 	end := a[i+1:]
-	result = append(start, end)
-	return result
+	result = append(start, end...)
+	return result, nil
 }
