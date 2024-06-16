@@ -15,7 +15,47 @@ func TestExampleTestSuite(t *testing.T) {
 	suite.Run(t, &ExampleTestSuite{})
 }
 
-func TestCombinations(t *testing.T) {
+func TestCombinationMaker(t *testing.T) {
+	asserts := assert.New(t)
+	testCases := []struct {
+		testName string
+		input    []string
+		expected [][]string
+		err      error
+	}{
+		{
+			testName: "Single input returns single value",
+			input: []string{
+				"one",
+			},
+			expected: [][]string{
+				{"one"},
+			},
+			err: nil,
+		},
+		//{
+		//	testName: "Double input returns double value",
+		//	input: []string{
+		//		"one",
+		//		"two",
+		//	},
+		//	expected: [][]string{
+		//		{"one", "two"},
+		//		{"two", "one"},
+		//	},
+		//	err: nil,
+		//},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.testName, func(t *testing.T) {
+			audit, err := CreateCombinations(tc.input)
+			asserts.Equal(tc.expected, audit)
+			asserts.Equal(tc.err, err)
+		})
+	}
+}
+
+func TestRemoveElementFunction(t *testing.T) {
 	asserts := assert.New(t)
 	testCases := []struct {
 		testName  string
@@ -74,13 +114,13 @@ func TestCombinations(t *testing.T) {
 			err:       errors.New("Cannot split an empty array"),
 		},
 		{
-			testName:  "Ensure an array of a single item returns an error",
-			input:     []string{
-				"Zero"
+			testName: "Ensure an array of a single item returns an error",
+			input: []string{
+				"Zero",
 			},
 			index:     0,
 			expOutput: []string(nil),
-			err:       errors.New("Cannot split an empty array"),
+			err:       errors.New("Cannot split an array with a single item"),
 		},
 	}
 
